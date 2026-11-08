@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+
 struct MovieRow: View{
     @Bindable var movie: Movie
     
@@ -16,17 +17,27 @@ struct MovieRow: View{
                     Text(movie.title)
                         .font(.title2)
                         .strikethrough(movie.isWatched)
-                    HStack{
+                    HStack(spacing:5){
                         if let genre = movie.genre{
                             Text(genre.name)
                                 .font(.caption)
                                 .foregroundStyle(genre.color)
                         }
                         if let year = movie.year{
+                            if movie.genre != nil{
+                                Text("·").font(.caption).foregroundStyle(.gray)
+                            }
+                            
                             Text(String(describing: year))
                                 .font(.caption)
+                                .foregroundStyle(.gray)
                         }
                         if movie.rating > 0 {
+                            
+                            if movie.year != nil || movie.genre != nil{
+                                Text("·").font(.caption).foregroundStyle(.gray)
+                            }
+                            
                             StarView(rating: movie.rating)
                         }
                     }
@@ -51,7 +62,7 @@ struct StarView: View {
 }
 
 #Preview {
-    @Previewable var m: Movie = Movie(title: "Arrival", year: 2016, genre: Genre(name: "Science Fiction", color: .green), isWatched: true, rating: 5)
+    @Previewable var m: Movie = Movie(title: "Arrival",year:1968, genre: Genre(name: "Science Fiction", color: .green), isWatched: true, rating: 5)
     List{
         MovieRow(movie: m)
     }
