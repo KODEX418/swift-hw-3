@@ -5,12 +5,13 @@
 //  Created by Kostya on 08.11.2026.
 //
 import SwiftUI
+import SwiftData
 
 struct AddGenreView:View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    @State var currentName = ""
-    @State var currentColor: Color = .gray
+    @State private var currentName = ""
+    @State private var currentColor: Color = .gray
     var body: some View {
         NavigationStack{
             Form{
@@ -25,13 +26,16 @@ struct AddGenreView:View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Добавить") {}
+                    Button("Добавить") {
+                        addGenre()
+                        dismiss()
+                    }
                 }
             }
         }
     }
     func addGenre() {
-        
+        context.insert(Genre(name: currentName, color: currentColor))
     }
 }
 #Preview {

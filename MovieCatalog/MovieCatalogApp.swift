@@ -13,6 +13,6 @@ struct MovieCatalogApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: Movie.self)
+        .modelContainer(for: [Movie.self, Genre.self])
     }
 }

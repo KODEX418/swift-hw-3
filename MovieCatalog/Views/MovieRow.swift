@@ -22,27 +22,20 @@ struct MovieRow: View{
                             Text(genre.name)
                                 .font(.caption)
                                 .foregroundStyle(genre.color)
+                            Text("·").font(.caption).foregroundStyle(.gray)
                         }
-                        if let year = movie.year{
+                        Text(String(describing: movie.year))
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                    
+                        if movie.rating > 0 {
                             if movie.genre != nil{
                                 Text("·").font(.caption).foregroundStyle(.gray)
                             }
-                            
-                            Text(String(describing: year))
-                                .font(.caption)
-                                .foregroundStyle(.gray)
-                        }
-                        if movie.rating > 0 {
-                            
-                            if movie.year != nil || movie.genre != nil{
-                                Text("·").font(.caption).foregroundStyle(.gray)
-                            }
-                            
                             StarView(rating: movie.rating)
                         }
                     }
                 }
-                
             }
         }
     }
@@ -62,7 +55,7 @@ struct StarView: View {
 }
 
 #Preview {
-    @Previewable var m: Movie = Movie(title: "Arrival",year:1968, genre: Genre(name: "Science Fiction", color: .green), isWatched: true, rating: 5)
+    @Previewable var m = Movie(title: "Arrival",year:1968, genre: Genre(name: "Science Fiction", color: .green), isWatched: true, rating: 5)
     List{
         MovieRow(movie: m)
     }

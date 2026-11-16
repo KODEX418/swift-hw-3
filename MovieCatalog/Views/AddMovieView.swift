@@ -11,27 +11,39 @@ import SwiftData
 struct AddMovieView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    @State var movieTitle = ""
-    @State var movieYear: Int = Calendar.current.component(.year, from: .now)
-    @State var movieGenre: Genre? = nil
-    @State var userKnowsYear = false
-    @State var showEditGenre = false
+    @State private var movieTitle = ""
+    @State private var movieYear: Int = Calendar.current.component(.year, from: .now)
+    @State private var movieRating: Int = 0
+    @State private var movieGenre: Genre? = nil
+    @State private var showEditGenre = false
+    @State private var showAddGenre = false
     @Query private var existingGenres: [Genre]
     var body: some View {
         NavigationStack{
             Form {
                 TextField("Название", text: $movieTitle)
-                Toggle(isOn: $userKnowsYear) {
-                    HStack {
-                        Text("Год:").foregroundStyle(.gray)
-                        Stepper(value: $movieYear, in: 1888...2100){
-                            TextField("", value: $movieYear, format: .number)
-                        }
-                        .opacity(userKnowsYear ? 1 : 0)
-                        .disabled(!userKnowsYear)
+                HStack {
+                    Text("Год:").foregroundStyle(.gray)
+                    Stepper(value: $movieYear, in: 1888...2100){
+                        TextField("", value: $movieYear, format: .number)
+                    }
+                }
+                HStack {
+                    Text("Рейтинг:").foregroundStyle(.gray)
+                    Stepper(value: $movieRating, in: 0...5){
+                        TextField("", value: $movieRating, format: .number)
                     }
                 }
                 HStack{
+                    Button {
+                        if movieGenre != nil{
+                            showEditGenre = true
+                        }
+                    } label: {
+                        Image(systemName: "square.and.pencil")
+                    }
+                    .buttonStyle(.plain)
+                    Divider()
                     Picker("Жанр", selection: $movieGenre){
                         Text("").tag(nil as Genre?)
                         Divider()
@@ -41,9 +53,9 @@ struct AddMovieView: View {
                     }.tint((movieGenre != nil) ? movieGenre?.color : .gray)
                     Divider()
                     Button {
-                        showEditGenre = true
+                        showAddGenre = true
                     } label: {
-                        Image(systemName: "square.and.pencil")
+                        Image(systemName: "plus")
                     }
                     .buttonStyle(.plain)
                 }
@@ -56,15 +68,25 @@ struct AddMovieView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Добавить") {}
+                    Button("Добавить") {
+                        addMovie()
+                        dismiss()
+                    }.disabled(movieTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
                 
             }
             .sheet(isPresented: $showEditGenre){
+                if let movieGenre{
+                    EditGenreView(genre: movieGenre)
+                }
+            }
+            .sheet(isPresented: $showAddGenre){
                 AddGenreView()
-                
             }
         }
+    }
+    private func addMovie(){
+        context.insert(Movie(title: movieTitle, year: movieYear, genre: movieGenre, rating: movieRating))
     }
 }
 #Preview {

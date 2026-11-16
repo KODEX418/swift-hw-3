@@ -26,7 +26,14 @@ final class Genre{
     var g:Double
     var b:Double
     var color: Color{
-        return Color(red:r, green:g, blue:b)
+        get {
+            return Color(red:r, green:g, blue:b)
+        }
+        set(newColor){
+            r = newColor.rgb.red
+            g = newColor.rgb.green
+            b = newColor.rgb.blue
+        }
     }
     @Relationship(deleteRule: .nullify, inverse: \Movie.genre)
     
