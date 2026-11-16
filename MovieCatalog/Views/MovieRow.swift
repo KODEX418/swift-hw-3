@@ -29,9 +29,7 @@ struct MovieRow: View{
                             .foregroundStyle(.gray)
                     
                         if movie.rating > 0 {
-                            if movie.genre != nil{
-                                Text("·").font(.caption).foregroundStyle(.gray)
-                            }
+                            Text("·").font(.caption).foregroundStyle(.gray)
                             StarView(rating: movie.rating)
                         }
                     }
